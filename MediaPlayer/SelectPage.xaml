@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="MediaPlayer.SelectPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MediaPlayer"
+    xmlns:c="using:MediaPlayer.Model"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
+        <c:MyConverter x:Key="MyConverter"/>
+    </Page.Resources>
+    
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height ="2*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Margin="20,60,150,0" 
+                   Text="Playing Song" FontSize="35" 
+                   VerticalAlignment="Bottom"/>
+        <StackPanel Margin="50,50,50,25" Grid.Row="1">
+            <TextBlock x:Name="Textblock_Title" 
+                       Text="{Binding Title}" FontSize="23"
+                       Margin="5,5,0,0" HorizontalAlignment="Left"/>
+            <MediaElement x:Name="mediaElement" HorizontalAlignment="Center" 
+                          Height="203" VerticalAlignment="Top" 
+                          Width="256" Source="{Binding File.Path}" 
+                          PosterSource="Assets/background.jpg" />
+            <ProgressBar x:Name="progressBar" Margin="0, 5, 0,0" 
+                         Maximum="{Binding Duration.TotalSeconds, Mode=OneWay}"
+                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay}"
+                         />
+            <Canvas Height="34" Margin="5,0">
+                <TextBlock x:Name="currentsecond" FontSize="11"
+            		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="95" TextAlignment="Left"/>
+                <TextBlock x:Name="duration" FontSize="11"
+            		Text="{Binding Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Canvas.Left="195" Canvas.Top="0" Width="95" TextAlignment="Right" />
+            </Canvas>
+        </StackPanel>
+        <TextBlock Grid.Row="2" Text="Nothing to do here" FontSize="40" Foreground="Cyan"/>
+    </Grid>
+</Page>
