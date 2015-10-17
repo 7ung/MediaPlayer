@@ -67,20 +67,9 @@ namespace MediaPlayer
             
         }
 
-        private void musicCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void allmusic_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = (e.ClickedItem as FilesViewModel);
-            Frame.Navigate(typeof(SelectPage), item);
-        }
-
-        private void ListViewItem_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var item = (allmusic.SelectedItem as FilesViewModel);
             Frame.Navigate(typeof(SelectPage), item);
         }
     }

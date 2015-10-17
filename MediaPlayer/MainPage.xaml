@@ -31,11 +31,11 @@
                         </ListView.DataContext>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ListViewItem IsHitTestVisible="False" >
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Title}" FontSize="23" Padding="0,10" Margin="0,0,5,0" />
-                                        <TextBlock Text="{Binding Artist, TargetNullValue='Unknown'}" FontSize="12" Padding="0,10" Margin="0,0,5,0" />
-                                    </StackPanel>
+                                <ListViewItem IsHitTestVisible="False">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" FontSize="23" Padding="0,10" Margin="0,0,5,0" />
+                                    <TextBlock Text="{Binding Artist, TargetNullValue='Unknown'}" FontSize="12" Padding="0,10" Margin="0,0,5,0" />
+                                </StackPanel>
                                 </ListViewItem>
                             </DataTemplate>
                         </ListView.ItemTemplate>

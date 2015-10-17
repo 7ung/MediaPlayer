@@ -24,7 +24,8 @@ namespace MediaPlayer.Model
         public ObservableCollection<FilesViewModel> AllFiles
         {
             get { return _allfiles; }
-            set { _allfiles = value;
+            set {
+                _allfiles = value;
             }
         }
 
@@ -33,10 +34,7 @@ namespace MediaPlayer.Model
             get { return _folder; }
             set
             {
-                if (_folder != value)
-                {
-                    _folder = value;
-                }
+                _folder = value;
             }
         }
         public FolderTracker()
@@ -53,8 +51,9 @@ namespace MediaPlayer.Model
             _listKnowfolder.Add("Documents");
             _listKnowfolder.Add("Saved Pictures");
             _listKnowfolder.Add("Camera Roll");
-
+            AllFiles.CollectionChanged +=this.CollectionChanged;
         }
+
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         

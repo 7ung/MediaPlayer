@@ -24,7 +24,7 @@ namespace MediaPlayer
     /// </summary>
     public sealed partial class SelectPage : Page
     {
-        
+        FilesViewModel currentItems;
         public SelectPage()
         {
             this.InitializeComponent();
@@ -43,14 +43,5 @@ namespace MediaPlayer
             this.progressBar.DataContext = e.Parameter as FilesViewModel;
         }
 
-        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
