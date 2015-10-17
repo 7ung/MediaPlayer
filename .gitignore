@@ -5,3 +5,5 @@
 /.vs/MediaPlayer/v14
 /MediaPlayer/bin/Debug
 /MediaPlayer/obj/Debug
+/MediaPlayer/bin
+/MediaPlayer/obj

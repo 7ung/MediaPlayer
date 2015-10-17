@@ -11,6 +11,8 @@
     <Page.Resources>
         <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
         <c:MyConverter x:Key="MyConverter"/>
+        <c:ConverterTimeSpanToInt x:Key="TimeSpanToInt"/>
+        <c:ValueTimelineConverter x:Key="ValueTimeline"/>
     </Page.Resources>
 
     <Grid Background="#FF111111" >
@@ -24,7 +26,8 @@
                    VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
         <StackPanel Margin="0,0,0,0" Grid.Row="1" d:LayoutOverrides="TopPosition, BottomPosition">
 
-            <MediaElement x:Name="mediaElement" Source="{Binding File.Path}" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" PosterSource="Assets/default-thumbnail.png" />
+            <MediaElement x:Name="mediaElement" Source="{Binding File.Path}" 
+                          Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" PosterSource="Assets/default-thumbnail.png" />
             <TextBlock x:Name="Textblock_Title" 
                        Text="{Binding Title}" FontSize="23"
                        Margin="0,10,0,20" HorizontalAlignment="Center"/>
@@ -34,11 +37,22 @@
             		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="Auto" TextAlignment="Left" VerticalAlignment="Center"/>
                 <ProgressBar x:Name="progressBar" Margin="10, 0, 10, 0" Padding="0" Width="300"
                          Maximum="{Binding Duration.TotalSeconds, Mode=OneWay}"
-                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay}" Foreground="White"
+                         Value="{Binding Position, Converter={StaticResource TimeSpanToInt}, ConverterParameter='Seconds', ElementName=mediaElement, Mode=TwoWay}" Foreground="White" ValueChanged="progressBar_ValueChanged"
                          />
                 <TextBlock x:Name="duration" FontSize="11" Margin="0,0,6,0"
             		Text="{Binding Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Width="Auto" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                
             </StackPanel>
+            <Canvas x:Name="timeCanvas" Width="340">
+                <Ellipse Canvas.Top="-26" x:Name="timeBtn" Fill="White" Height="39" Width="40" ManipulationDelta="timeBtn_ManipulationDelta" ManipulationMode="All" Stroke="#00000000" StrokeThickness="25" ManipulationCompleted="timeBtn_ManipulationCompleted">
+                    <!--<Canvas.Left>
+                        <Binding Path="Value" 
+                                 ElementName="progressBar"
+                                 Converter="{StaticResource ValueTimeline}"
+                                 />
+                    </Canvas.Left>-->
+                </Ellipse>
+            </Canvas>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
                 <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonStyleWithImage}" BorderThickness="0">
