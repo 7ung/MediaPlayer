@@ -33,8 +33,8 @@
                             <DataTemplate>
                                 <ListViewItem IsHitTestVisible="False">
                                 <StackPanel>
-                                    <TextBlock Text="{Binding Title}" FontSize="23" Padding="0,10" Margin="0,0,5,0" />
-                                    <TextBlock Text="{Binding Artist, TargetNullValue='Unknown'}" FontSize="12" Padding="0,10" Margin="0,0,5,0" />
+                                    <TextBlock x:Name="listviewitem_Name"  Text="{Binding Title}" FontSize="23" Padding="0,10" Margin="0,0,5,0" />
+                                    <TextBlock x:Name="listviewitem_Artist"  Text="{Binding Artist, TargetNullValue='Unknown'}" FontSize="12" Padding="0,10" Margin="0,0,5,0" />
                                 </StackPanel>
                                 </ListViewItem>
                             </DataTemplate>
@@ -42,15 +42,19 @@
                     </ListView>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Folder">
+            <PivotItem Header="Artist">
                 <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="musicCategory" >
+                    <ListView x:Name="artistcategory" ItemClick="artistcategory_ItemClick" IsItemClickEnabled="True">
                         <ListView.DataContext>
                             <Model:FolderTracker/>
                         </ListView.DataContext>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ListViewItem Content="{Binding Folder.Name}"/>
+                                <ListViewItem IsHitTestVisible="False">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding }" FontSize="25"/>
+                                    </StackPanel>
+                                </ListViewItem>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

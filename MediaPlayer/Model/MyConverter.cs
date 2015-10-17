@@ -37,6 +37,7 @@ namespace MediaPlayer.Model
                 return timespan.ToString(@"hh\:mm\:ss");
             else
                 return timespan.ToString(@"mm\:ss");
+
         }
         //
         // Summary:

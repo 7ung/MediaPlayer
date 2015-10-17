@@ -71,11 +71,11 @@ namespace MediaPlayer.ViewModel
             }
         }
         
-        public FilesViewModel(StorageFile file)
+        public FilesViewModel(StorageFile file, MusicProperties properties)
         {
             File = file;
             Name = file.Name;
-            //Musicproperties = musicproperties;
+            Musicproperties = properties;
         }
         public event PropertyChangedEventHandler PropertyChanged;
         

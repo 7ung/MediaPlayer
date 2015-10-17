@@ -2,6 +2,7 @@
 using MediaPlayer.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -40,7 +41,7 @@ namespace MediaPlayer
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             // TODO: Prepare page for display here.
 
@@ -51,20 +52,21 @@ namespace MediaPlayer
             // this event is handled for you.
 
             
-            // to run followwed statement, must add association to manifest
+            // to access sd card, must add association to manifest
             // http://stackoverflow.com/questions/24416244/how-do-i-add-a-file-type-association-in-a-windows-phone-8-1-app-manifest
-            //var sdcard = (await KnownFolders.RemovableDevices.GetFoldersAsync()).FirstOrDefault();
-            //var allfolder = await sdcard.GetFoldersAsync();
-            //foreach (var folder in allfolder)
-            //{
-            //    Tracker.LoadLocalFolder(folder);
-            //}
-            Tracker.fetchStorageInfo();
-            this.musicCategory.ItemsSource = Tracker.Folder;            // bind folder vô listitem musiccategory
-            this.allmusic.ItemsSource = Tracker.AllFiles;               // bind files vô listitem allmusic
-                //this.allmusic.ItemsSource  = AlphaKeyGroup<FilesViewModel>.CreatGroups(
-                //    Tracker.AllFiles.ToList(), file => file.File.DisplayName, true);
+
+            await Tracker.fetchStorageInfo();
+            this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title).ToList());
+            this.artistcategory.ItemsSource = Tracker.AllFiles.Select(file => file.Artist).Distinct();
             
+        }
+
+        /// <summary>
+        ///gán bind từ một observe list vào một list control (Gridview, listview, listbox)
+        /// </summary>
+        private void setListBinding<T>(Selector selector, IList<T> observeList)
+        {
+            selector.ItemsSource = observeList;
         }
 
         private void allmusic_ItemClick(object sender, ItemClickEventArgs e)
@@ -72,5 +74,12 @@ namespace MediaPlayer
             var item = (e.ClickedItem as FilesViewModel);
             Frame.Navigate(typeof(SelectPage), item);
         }
+
+        private void artistcategory_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = Tracker.AllFiles.Where(file => file.Artist == (e.ClickedItem as string)).First();
+            Frame.Navigate(typeof(SelectPage), item);
+        }
+
     }
 }

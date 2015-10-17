@@ -34,7 +34,7 @@
             		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="Auto" TextAlignment="Left" VerticalAlignment="Center"/>
                 <ProgressBar x:Name="progressBar" Margin="10, 0, 10, 0" Padding="0" Width="300"
                          Maximum="{Binding Duration.TotalSeconds, Mode=OneWay}"
-                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay}" Foreground="White"
+                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay, ConverterParameter={Binding Text, ElementName=currentsecond,Mode=OneWay}}" Foreground="White"
                          />
                 <TextBlock x:Name="duration" FontSize="11" Margin="0,0,6,0"
             		Text="{Binding Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Width="Auto" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" />

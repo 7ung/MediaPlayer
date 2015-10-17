@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MediaPlayer.ViewModel.FilesViewModel">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <Members>
+      <Field Name="_album" Hidden="true" />
+      <Field Name="_artist" Hidden="true" />
+      <Field Name="_duration" Hidden="true" />
+      <Field Name="_file" Hidden="true" />
+      <Field Name="_musicproperties" Hidden="true" />
+      <Field Name="_name" Hidden="true" />
+      <Field Name="_title" Hidden="true" />
+      <Method Name="FilesViewModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAIACAEQAIBAAAAQEgIEEIIAAIAAACAAAEAA=</HashCode>
+      <FileName>ViewModel\FilesViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MediaPlayer.Model.FolderTracker">
+    <Position X="2.5" Y="0.75" Width="1.5" />
+    <Members>
+      <Field Name="_allfiles" Hidden="true" />
+      <Field Name="_folder" Hidden="true" />
+      <Method Name="FolderTracker" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAQAAgAAFggAAACAAAAAALAAAIAAABAA=</HashCode>
+      <FileName>Model\FolderTracker.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MediaPlayer.MainPage">
+    <Position X="5.25" Y="0.75" Width="2.25" />
+    <Members>
+      <Method Name="MainPage" Hidden="true" />
+      <Method Name="OnNavigatedTo" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABQQAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tracker" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MediaPlayer.SelectPage">
+    <Position X="5.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SelectPage.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="currentItems" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
