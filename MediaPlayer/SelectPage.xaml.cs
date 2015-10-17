@@ -1,4 +1,5 @@
-﻿using MediaPlayer.ViewModel;
+﻿using MediaPlayer.Model;
+using MediaPlayer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,10 +28,11 @@ namespace MediaPlayer
     public sealed partial class SelectPage : Page
     {
         private bool _isManipulating = false;
-
+        private Playlist _playlist;
         public SelectPage()
         {
             this.InitializeComponent();
+
         }
 
         /// <summary>
@@ -39,10 +42,27 @@ namespace MediaPlayer
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.mediaElement.DataContext = e.Parameter as FilesViewModel;
-            this.Textblock_Title.DataContext = e.Parameter as FilesViewModel;
-            this.duration.DataContext = e.Parameter as FilesViewModel;
-            this.progressBar.DataContext = e.Parameter as FilesViewModel;
+            // custom nút back
+            HardwareButtons.BackPressed +=HardwareButtons_BackPressed;
+            this._playlist = e.Parameter as Playlist;
+            // bind;
+            this.mediaElement.DataContext = _playlist;
+            this.Textblock_Title.DataContext = _playlist;
+            this.duration.DataContext = _playlist;
+            this.progressBar.DataContext = _playlist;
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            this._playlist = null;
+        }
+        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            //e.Handled = true;
+            //if (Frame.CanGoBack)
+            //{
+            //    Frame.GoBack();
+            //}
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
@@ -110,6 +130,21 @@ namespace MediaPlayer
             var percent = progress.Value / progress.Maximum;
             var curPos = (timeCanvas.Width - 40) * percent;
             Canvas.SetLeft(timeBtn, curPos);
+        }
+
+        private void nextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _playlist.Next();
+        }
+
+        private void previousBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _playlist.Previous();
+        }
+
+        private void shufferBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            _playlist.Shuffle();
         }
     }
 }

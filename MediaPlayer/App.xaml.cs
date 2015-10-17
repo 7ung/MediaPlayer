@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,7 +36,26 @@ namespace MediaPlayer
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+
+            // hiện thực nút back
+           // HardwareButtons.BackPressed +=HardwareButtons_BackPressed;
         }
+
+        //private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        //{
+        //    Frame frame = Window.Current.Content as Frame;
+        //    if (frame == null)
+        //        return;
+        //    if (frame.CanGoBack)
+        //    {
+        //        frame.GoBack();
+        //        e.Handled = true;
+        //    }
+        //    else
+        //    {
+        //        ap
+        //    }
+        //}
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points

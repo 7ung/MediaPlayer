@@ -25,7 +25,7 @@
         <Pivot>
             <PivotItem Header="All">
                 <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="allmusic" ItemClick="allmusic_ItemClick" IsItemClickEnabled="True" BorderThickness="1" >
+                    <ListView x:Name="allmusic" ItemClick="allmusic_ItemClick" IsItemClickEnabled="True" BorderThickness="1" IsHoldingEnabled="False" >
                         <ListView.DataContext>
                             <Model:FolderTracker/>
                         </ListView.DataContext>
@@ -42,7 +42,7 @@
                     </ListView>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Artist">
+            <PivotItem Header="Artist" IsHoldingEnabled="False">
                 <Grid Style="{StaticResource GridInPivot}">
                     <ListView x:Name="artistcategory" ItemClick="artistcategory_ItemClick" IsItemClickEnabled="True">
                         <ListView.DataContext>
