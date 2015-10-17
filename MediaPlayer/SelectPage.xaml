@@ -12,35 +12,64 @@
         <JumpListItemBackgroundConverter x:Key="JumpListItemBackgroundConverter"/>
         <c:MyConverter x:Key="MyConverter"/>
     </Page.Resources>
-    
-    <Grid >
+
+    <Grid Background="#FF111111" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="6*"/>
-            <RowDefinition Height ="2*"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height ="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Margin="20,60,150,0" 
-                   Text="Playing Song" FontSize="35" 
-                   VerticalAlignment="Bottom"/>
-        <StackPanel Margin="50,50,50,25" Grid.Row="1">
+        <TextBlock Grid.Row="0" Margin="0,0,0,0" 
+                   Text="Now Playing" FontSize="35" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+        <StackPanel Margin="0,0,0,0" Grid.Row="1" d:LayoutOverrides="TopPosition, BottomPosition">
+
+            <MediaElement x:Name="mediaElement" Source="{Binding File.Path}" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" PosterSource="Assets/default-thumbnail.png" />
             <TextBlock x:Name="Textblock_Title" 
                        Text="{Binding Title}" FontSize="23"
-                       Margin="5,5,0,0" HorizontalAlignment="Left"/>
-            <MediaElement x:Name="mediaElement" HorizontalAlignment="Center" 
-                          Height="203" VerticalAlignment="Top" 
-                          Width="256" Source="{Binding File.Path}" 
-                          PosterSource="Assets/background.jpg" />
-            <ProgressBar x:Name="progressBar" Margin="0, 5, 0,0" 
+                       Margin="0,10,0,20" HorizontalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock x:Name="currentsecond" FontSize="11" Margin="13,0,0,0"
+            		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="Auto" TextAlignment="Left" VerticalAlignment="Center"/>
+                <ProgressBar x:Name="progressBar" Margin="10, 0, 10, 0" Padding="0" Width="300"
                          Maximum="{Binding Duration.TotalSeconds, Mode=OneWay}"
-                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay}"
+                         Value="{Binding Position.TotalSeconds, ElementName=mediaElement, Mode=OneWay}" Foreground="White"
                          />
-            <Canvas Height="34" Margin="5,0">
-                <TextBlock x:Name="currentsecond" FontSize="11"
-            		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="95" TextAlignment="Left"/>
-                <TextBlock x:Name="duration" FontSize="11"
-            		Text="{Binding Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Canvas.Left="195" Canvas.Top="0" Width="95" TextAlignment="Right" />
-            </Canvas>
+                <TextBlock x:Name="duration" FontSize="11" Margin="0,0,6,0"
+            		Text="{Binding Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Width="Auto" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
+                <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonStyleWithImage}" BorderThickness="0">
+                    <ToggleButton.Background>
+                        <ImageBrush Stretch="Uniform" ImageSource="Assets/clockwise11.png"/>
+                    </ToggleButton.Background>
+                </ToggleButton>
+
+                <Button x:Name="previousBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" MinWidth="50" MinHeight="50" Width="60" Height="60" Style="{StaticResource ButtonStyleWithImage}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="ms-appx:/Assets/rewind7.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="playBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" Style="{StaticResource ButtonStyleWithImage}" Width="70" MinWidth="50" MinHeight="50" Height="70" Margin="20,0">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/play128.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="nextBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" MinWidth="50" MinHeight="50" Width="60" Height="60" Style="{StaticResource ButtonStyleWithImage}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/forward28.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <ToggleButton x:Name="shufferBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonStyleWithImage}" BorderThickness="0">
+                    <ToggleButton.Background>
+                        <ImageBrush Stretch="Uniform" ImageSource="Assets/shuffle26.png"/>
+                    </ToggleButton.Background>
+                </ToggleButton>
+
+
+            </StackPanel>
         </StackPanel>
-        <TextBlock Grid.Row="2" Text="Nothing to do here" FontSize="40" Foreground="Cyan"/>
     </Grid>
 </Page>
