@@ -26,7 +26,7 @@
       <Method Name="FolderTracker" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAAAQAAgAAFggAAACAAAAAALAAAIAAABAA=</HashCode>
+      <HashCode>AAAABAAAAQAAAQAAgAAFggAAACAAAAAADAAAAAAABAA=</HashCode>
       <FileName>Model\FolderTracker.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -38,7 +38,7 @@
       <Method Name="OnNavigatedTo" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAABQQAAAABAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgBQQAAAABAAAAAAAAAAAAAA=</HashCode>
       <FileName>MainPage.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -48,12 +48,9 @@
   <Class Name="MediaPlayer.SelectPage">
     <Position X="5.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAACAAAAAAAAAgAgAgAAAQAAAAAgAAAQQAAAAAAAAA=</HashCode>
       <FileName>SelectPage.xaml.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="currentItems" />
-    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

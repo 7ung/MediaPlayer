@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace MediaPlayer.Model
@@ -33,7 +35,7 @@ namespace MediaPlayer.Model
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var timespan = (TimeSpan)value;
-            if (timespan.Hours > 0 )
+            if (timespan.Hours > 0)
                 return timespan.ToString(@"hh\:mm\:ss");
             else
                 return timespan.ToString(@"mm\:ss");
@@ -65,4 +67,79 @@ namespace MediaPlayer.Model
             return null;
         }
     }
+
+    public class ConverterTimeSpanToInt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var timespan = (TimeSpan)value;
+
+            if (parameter.ToString().CompareTo("Milliseconds") == 0)
+            {
+                return timespan.TotalMilliseconds;
+            }
+            else
+            {
+                return timespan.TotalSeconds;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            var time = (double)value;
+
+            if (parameter.ToString().CompareTo("Milliseconds") == 0)
+            {
+                return new TimeSpan(0, 0, 0, (int)time);
+            }
+            else
+            {
+                return new TimeSpan(0, 0, (int)time);
+            }
+        }
+    }
+
+    public class ValueTimelineConverter : DependencyObject, IValueConverter
+    {
+        //public ProgressBar TimelineBar
+        //{
+        //    get { return (ProgressBar)GetValue(ParentControlProperty); }
+        //    set { SetValue(ParentControlProperty, value); }
+        //}
+
+        //public static readonly DependencyProperty ParentControlProperty =
+        //    DependencyProperty.Register("TimelineBar", typeof(ProgressBar), typeof(ValueTimelineConverter), new PropertyMetadata(null));
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var time = (double)value;
+            var bar = parameter as ProgressBar;
+
+            //if (parameter.ToString().CompareTo("Milliseconds") == 0)
+            //{
+            //      kiểm tra param truyền vô
+            //}
+
+            if (bar == null)
+                return 0;
+
+            var percent = time / bar.Maximum;
+
+            return bar.Width * percent;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            var pos = (double)value;
+            var bar = parameter as ProgressBar;
+            if (bar == null)
+                return 0;
+
+            var percent = pos / bar.Width;
+
+            return bar.Maximum * percent;
+        }
+    }
+
+
 }
