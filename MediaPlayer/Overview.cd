@@ -38,7 +38,7 @@
       <Method Name="OnNavigatedTo" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAgBQQAAAABAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAiBQQAAAABAAAAAgAAAAAAAA=</HashCode>
       <FileName>MainPage.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -48,7 +48,7 @@
   <Class Name="MediaPlayer.SelectPage">
     <Position X="5.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QABACAAAACAAAAgAgAgAAAQACAAAgAAAQQAAAAAAAAA=</HashCode>
+      <HashCode>QABACAAAACAAAAgAgAgAAAQACAAAgAQAQQgAAAAAAAA=</HashCode>
       <FileName>SelectPage.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

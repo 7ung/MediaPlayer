@@ -7,7 +7,7 @@
     xmlns:Model="using:MediaPlayer.Model"
     x:Class="MediaPlayer.MainPage"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="400">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <Style x:Key="GridInPivot" TargetType="Grid">
             <Setter Property="Margin" Value="0,0,0,10"/>
@@ -17,10 +17,7 @@
             IsSourceGrouped="True" 
             ItemsPath="InternalList" 
             Source="{Binding AlphaKeyGroup, Source={Binding}}"/>
-
-
     </Page.Resources>
-
     <Grid>
         <Pivot>
             <PivotItem Header="All">
@@ -60,7 +57,42 @@
                     </ListView>
                 </Grid>
             </PivotItem>
-
+            <PivotItem Header="Album" IsHoldingEnabled="False">
+                <Grid Style="{StaticResource GridInPivot}">
+                    <ListView x:Name="albumcategory" ItemClick="albumcategory_ItemClick" IsItemClickEnabled="True">
+                        <ListView.DataContext>
+                            <Model:FolderTracker/>
+                        </ListView.DataContext>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ListViewItem IsHitTestVisible="False">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding }" FontSize="25"/>
+                                    </StackPanel>
+                                </ListViewItem>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="AlbumArtist" IsHoldingEnabled="False">
+                <Grid Style="{StaticResource GridInPivot}">
+                    <ListView x:Name="albumcartistategory" ItemClick="albumartistcategory_ItemClick" IsItemClickEnabled="True">
+                        <ListView.DataContext>
+                            <Model:FolderTracker/>
+                        </ListView.DataContext>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ListViewItem IsHitTestVisible="False">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding }" FontSize="25"/>
+                                    </StackPanel>
+                                </ListViewItem>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </PivotItem>
         </Pivot>
     </Grid>
 </Page>

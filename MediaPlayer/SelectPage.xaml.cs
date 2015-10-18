@@ -5,10 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media;
+using Windows.Media.Playback;
 using Windows.Phone.UI.Input;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -17,7 +21,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
-
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
 namespace MediaPlayer
@@ -32,8 +35,8 @@ namespace MediaPlayer
         public SelectPage()
         {
             this.InitializeComponent();
-
         }
+
 
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
@@ -145,6 +148,28 @@ namespace MediaPlayer
         private void shufferBtn_Checked(object sender, RoutedEventArgs e)
         {
             _playlist.Shuffle();
+        }
+
+        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            if ((sender as MediaElement).IsLooping)
+                return;
+            _playlist.Next();
+        }
+
+        private void repeatBtn_Checked(object sender, RoutedEventArgs e)
+        {
+            this.mediaElement.IsLooping = true;
+        }
+
+        private void repeatBtn_Unchecked(object sender, RoutedEventArgs e)
+        {
+            this.mediaElement.IsLooping = false;
+        }
+
+        private void playBtn_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

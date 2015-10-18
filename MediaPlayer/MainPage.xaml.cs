@@ -38,6 +38,7 @@ namespace MediaPlayer
             Tracker = new FolderTracker();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            
         }
 
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
@@ -75,7 +76,9 @@ namespace MediaPlayer
             {
                 await Tracker.fetchStorageInfo();
                 this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title).ToList());
-                this.artistcategory.ItemsSource = Tracker.AllFiles.Select(file => file.Artist).Distinct();
+                this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct());
+                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct());
+                this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct());
                 isLoaded = true;
             }
         }
@@ -83,25 +86,41 @@ namespace MediaPlayer
         /// <summary>
         ///gán bind từ một observe list vào một list control (Gridview, listview, listbox)
         /// </summary>
-        private void setListBinding<T>(Selector selector, IList<T> observeList)
+        private void setListBinding<T>(Selector selector, IEnumerable<T> observeList)
         {
             selector.ItemsSource = observeList;
         }
 
         private void allmusic_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = (e.ClickedItem as FilesViewModel);
-            Playlist playlist = new Playlist(
-                Tracker.AllFiles.OrderBy(file => file.Title).ToList(),
-                (e.OriginalSource as ListView).Items.IndexOf(e.ClickedItem));
+            var clickeditem = (e.ClickedItem as FilesViewModel);                // bài hát được click
+            var listfile = allmusic.ItemsSource as IList<FilesViewModel>;       // danh sách các bài hát
+            int index = listfile.IndexOf(e.ClickedItem as FilesViewModel);      // zero-base index bài hát được chọn
+
+            Playlist playlist = new Playlist(listfile, index);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 
         private void artistcategory_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = Tracker.AllFiles.Where(file => file.Artist == (e.ClickedItem as string)).ToList();
-            int index = item.IndexOf(e.ClickedItem as FilesViewModel);
-            Playlist playlist = new Playlist(item,index);
+            Playlist playlist = new Playlist(item);
+            Frame.Navigate(typeof(SelectPage), playlist);
+        }
+
+        private void albumcategory_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string clickeditem = e.ClickedItem as string;                                       // tên album được chọn
+            var album = Tracker.AllFiles.Where(file => file.Album == clickeditem).ToList();     // lọc ra các bài hát từ album
+            Playlist playlist = new Playlist(album);
+            Frame.Navigate(typeof(SelectPage), playlist);
+        }
+
+        private void albumartistcategory_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string clickeditem = e.ClickedItem as string;                               // tên album artist được chhọn
+            var album = Tracker.AllFiles.Where(file => file.AlbumArtist == clickeditem).ToList();
+            Playlist playlist = new Playlist(album);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 

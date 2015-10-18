@@ -78,7 +78,6 @@ namespace MediaPlayer.Model
                     continue;
                 await fetchFolders(folder);
             }
-
         }
         public async Task fetchFolders(StorageFolder parentFolder)
         {

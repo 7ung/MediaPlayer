@@ -12,7 +12,45 @@ namespace MediaPlayer.Model
 {
     class Playlist : INotifyCollectionChanged, INotifyPropertyChanged
     {
-        public Playlist(IList<FilesViewModel> listfile, int currentitem)
+        private ObservableCollection<FilesViewModel> _listfile;
+        private int _currentIndex;
+        private FilesViewModel _currentItem;
+
+
+        /// <summary>
+        /// Thông tin bài hát hiện tại
+        /// </summary>
+        public FilesViewModel CurrentItem
+        {
+            get { return _currentItem; }
+            private set { setProperty(ref _currentItem, value, "CurrentItem"); }
+        }
+
+        /// <summary>
+        /// Chỉ số bài hát hiện tại
+        /// </summary>
+        public int CurrentIndex
+        {
+            get { return _currentIndex; }
+            set { setProperty(ref _currentIndex, value, "CurrentIndex"); }
+        }
+
+        /// <summary>
+        /// Tổng số bài hát
+        /// </summary>
+        public int Count { get { return ListFile.Count; } }
+
+        /// <summary>
+        /// Fired when any property changed
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Fired when any list or collection changed
+        /// </summary>
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public Playlist(IList<FilesViewModel> listfile, int currentitem = 0)
         {
             ListFile = new ObservableCollection<FilesViewModel>(listfile.ToArray());
             ListFile.CollectionChanged += OnChanged;
@@ -36,7 +74,6 @@ namespace MediaPlayer.Model
                 this.CurrentItem = ListFile[CurrentIndex];
             }
         }
-
         private void OnChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (CollectionChanged != null)
@@ -54,29 +91,15 @@ namespace MediaPlayer.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private ObservableCollection<FilesViewModel> _listfile;
-        private int _currentIndex;
-        private FilesViewModel _currentItem;
 
-        public FilesViewModel CurrentItem
-        {
-            get { return _currentItem; }
-            private set { setProperty(ref _currentItem, value, "CurrentItem"); }
-        }
-        public int CurrentIndex
-        {
-            get { return _currentIndex; }
-            set { setProperty(ref _currentIndex, value, "CurrentIndex"); }
-        }
-        public int Count { get { return ListFile.Count; } }
+        /// <summary>
+        /// List bài hát
+        /// </summary>
         public ObservableCollection<FilesViewModel> ListFile
         {
             get { return _listfile; }
             set { _listfile = value; }
         }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
         
         /// <summary>
         /// Bài hát kế tiếp
@@ -93,6 +116,7 @@ namespace MediaPlayer.Model
         {
             CurrentIndex--;
         }
+
         /// <summary>
         /// Trộn
         /// </summary>
