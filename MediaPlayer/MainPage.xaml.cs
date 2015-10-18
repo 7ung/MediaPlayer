@@ -75,10 +75,10 @@ namespace MediaPlayer
             if (isLoaded == false)
             {
                 await Tracker.fetchStorageInfo();
-                this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title).ToList());
-                this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str.First()));
-                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str => str.First()));
-                this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct().OrderBy(str =>str.First()));
+                this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title, StringComparer.OrdinalIgnoreCase).ToList());
+                this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
+                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
+                this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
                 isLoaded = true;
             }
         }
