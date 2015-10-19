@@ -35,6 +35,7 @@ namespace MediaPlayer
         public SelectPage()
         {
             this.InitializeComponent();
+            
         }
 
 

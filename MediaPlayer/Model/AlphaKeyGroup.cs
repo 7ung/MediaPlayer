@@ -18,6 +18,7 @@ namespace MediaPlayer.Model
         public AlphaKeyGroup(string key)
         {
             Key = key;
+            InternalList = new List<T>();
         }
 
         public static List<AlphaKeyGroup<T>> CreatGroups(IEnumerable<T> items, Func<T, string> keyselector, bool sort )

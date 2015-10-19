@@ -31,7 +31,7 @@ namespace MediaPlayer
     {
         private bool isLoaded;
         public FolderTracker Tracker { get; set; }
-
+        List<IGrouping<string, FilesViewModel>> keyedlist;
         public MainPage()
         {
             this.InitializeComponent();
@@ -53,6 +53,7 @@ namespace MediaPlayer
                 Application.Current.Exit();
             }
         }
+
 
 
         /// <summary>
@@ -77,9 +78,16 @@ namespace MediaPlayer
                 await Tracker.fetchStorageInfo();
                 this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title, StringComparer.OrdinalIgnoreCase).ToList());
                 this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
-                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
-                this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
+                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
+                // this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
+
+                keyedlist = Tracker.AllFiles.GroupBy(file => file.Name).ToList();
+                var groups = AlphaKeyGroup<FilesViewModel>.CreatGroups(
+                     Tracker.AllFiles,
+                     file => file.Name, true);
+                this.albumcartistategory.ItemsSource = groups;
                 isLoaded = true;
+
             }
         }
 

@@ -12,11 +12,11 @@
         <Style x:Key="GridInPivot" TargetType="Grid">
             <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
-        <CollectionViewSource 
+        <!--<CollectionViewSource 
             x:Key="ItemsGrouped" 
             IsSourceGrouped="True" 
             ItemsPath="InternalList" 
-            Source="{Binding AlphaKeyGroup, Source={Binding}}"/>
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"/>-->
     </Page.Resources>
     <Grid>
         <Pivot>
@@ -78,6 +78,15 @@
             <PivotItem Header="AlbumArtist" IsHoldingEnabled="False">
                 <Grid Style="{StaticResource GridInPivot}">
                     <ListView x:Name="albumcartistategory" ItemClick="albumartistcategory_ItemClick" IsItemClickEnabled="True">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True" >
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding }" Style="{StaticResource HeaderTextBlockStyle}"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
                         <ListView.DataContext>
                             <Model:FolderTracker/>
                         </ListView.DataContext>
@@ -85,7 +94,14 @@
                             <DataTemplate>
                                 <ListViewItem IsHitTestVisible="False">
                                     <StackPanel>
-                                        <TextBlock Text="{Binding }" FontSize="25"/>
+                                        <TextBlock Text="{Binding  Key}" FontSize="25" Foreground="Red" />
+                                        <ListView ItemsSource="{Binding InternalList}">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Title}" FontSize="16"/>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
                                     </StackPanel>
                                 </ListViewItem>
                             </DataTemplate>
