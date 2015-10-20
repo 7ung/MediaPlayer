@@ -1,11 +1,13 @@
 ﻿using MediaPlayer.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
@@ -86,6 +88,14 @@ namespace MediaPlayer.ViewModel
             Name = file.Name;
             Musicproperties = properties;
         }
+
+        //Test
+        public FilesViewModel(string fileName, string artist, string album, string artistalbum)
+        {
+            Name = fileName;
+            Album = album;
+            AlbumArtist = artistalbum;
+        }
         
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] String propertyName = null)
         {
@@ -107,5 +117,4 @@ namespace MediaPlayer.ViewModel
             return String.Compare(this.File.Path, (obj as FilesViewModel).File.Path);
         }
     }
-
 }

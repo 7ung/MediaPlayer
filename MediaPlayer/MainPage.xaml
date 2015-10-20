@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Model="using:MediaPlayer.Model"
+    xmlns:c="using:MediaPlayer.Model"
+    xmlns:ViewModel="using:MediaPlayer.ViewModel" x:Name="page"
     x:Class="MediaPlayer.MainPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -12,103 +14,277 @@
         <Style x:Key="GridInPivot" TargetType="Grid">
             <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
-        <!--<CollectionViewSource 
+
+        <!--Converter-->
+        <JumpListItemBackgroundConverter x:Key="backgroundConverter" />
+        <JumpListItemForegroundConverter x:Key="forcegroundConverter" />
+
+        <!--Tab Source-->
+        <CollectionViewSource  
             x:Key="ItemsGrouped" 
-            IsSourceGrouped="True" 
-            ItemsPath="InternalList" 
-            Source="{Binding AlphaKeyGroup, Source={Binding}}"/>-->
+            x:Name="itemsGrouped"
+            IsSourceGrouped="True"
+            ItemsPath="InternalList"
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"
+            />
+
+        <CollectionViewSource  
+            x:Key="AllItemsGrouped" 
+            x:Name="allItemsGrouped"
+            IsSourceGrouped="True"
+            ItemsPath="InternalList"
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"
+            />
+
+        <CollectionViewSource  
+            x:Key="ArtistItemsGrouped" 
+            x:Name="artistItemsGrouped"
+            IsSourceGrouped="True"
+            ItemsPath="InternalList"
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"
+            />
+
+        <CollectionViewSource  
+            x:Key="AlbumItemsGrouped" 
+            x:Name="albumItemsGrouped"
+            IsSourceGrouped="True"
+            ItemsPath="InternalList"
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"
+            />
+
+        <CollectionViewSource  
+            x:Key="AlbumArtistItemsGrouped" 
+            x:Name="albumArtistItemsGrouped"
+            IsSourceGrouped="True"
+            ItemsPath="InternalList"
+            Source="{Binding AlphaKeyGroup, Source={Binding}}"
+            />
+
+        <!--Tab Template-->
+        <DataTemplate x:Key="GroupHeaderTemplate">
+            <Border Padding="5">
+                <Border Background="{StaticResource PhoneAccentBrush}" BorderBrush="{StaticResource PhoneAccentBrush}" 
+                        BorderThickness="2" 
+                        Width="62" Height="62" 
+                        Margin="0,0,18,0" HorizontalAlignment="Left"
+                        >
+                    <TextBlock Text="{Binding Key}" 
+                               Foreground="{StaticResource PhoneForegroundBrush}" 
+                               FontSize="48" Padding="6" FontWeight="Bold"
+        				       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center" 
+                               />
+                </Border>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ArtistItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="image" 
+                       Height="50" Width="50" 
+                       Source="Assets/user73.png"
+                       Margin="10"/>
+                <TextBlock FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                           Text="{Binding}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AlbumArtistItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="image" 
+                       Height="50" Width="50" 
+                       Source="Assets/user73.png"
+                       Margin="10"/>
+                <TextBlock Text="{Binding}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AlbumItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="{StaticResource PhoneAccentBrush}" 
+                        BorderThickness="2,0,0,0" 
+                        Margin="5, 10"
+                        >
+                    <Image x:Name="image" 
+                           Height="120" Width="120" 
+                           Source="Assets/default-thumbnail-2.png"
+                           />
+                </Border>
+                <TextBlock Text="{Binding}" FontSize="21" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AllItemTemplate">
+            <StackPanel Margin="0,5,0,0">
+                <TextBlock x:Name="listviewitem_Name"  Text="{Binding Title}" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0"/>
+                <TextBlock x:Name="listviewitem_Artist"  Text="{Binding Artist, TargetNullValue=Unknown}" FontSize="12" Padding="0,0,0,5" Margin="10,0,0,0" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ZoomOutViewTemplate">
+            <Border Padding="5">
+                <Border Width="82" Height="82" HorizontalAlignment="Center" Background="{Binding Converter={StaticResource backgroundConverter}}" BorderBrush="{StaticResource PhoneAccentBrush}">
+                    <TextBlock Text="{Binding Group.Key}" 
+                               Foreground="{Binding Converter={StaticResource forcegroundConverter}}" 
+                               FontSize="48" Padding="6" FontWeight="Bold"
+        				       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </Border>
+        </DataTemplate>
+
     </Page.Resources>
     <Grid>
-        <Pivot>
+        
+        <Pivot x:Name="pivot" Height="{Binding Height, ElementName=page}" Width="{Binding Width, ElementName=page}">
+            <!--Tab All Songs-->
             <PivotItem Header="All">
-                <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="allmusic" ItemClick="allmusic_ItemClick" IsItemClickEnabled="True" BorderThickness="1" IsHoldingEnabled="False" >
-                        <ListView.DataContext>
-                            <Model:FolderTracker/>
-                        </ListView.DataContext>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ListViewItem IsHitTestVisible="False">
-                                    <StackPanel Margin="0,5,0,0" >
-                                        <TextBlock x:Name="listviewitem_Name"  Text="{Binding Title}" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0"  />
-                                        <TextBlock x:Name="listviewitem_Artist"  Text="{Binding Artist, TargetNullValue='Unknown'}" FontSize="12" Padding="0,0,0,5" Margin="10,0,0,0" />
-                                    </StackPanel>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                <Grid>
+                    <SemanticZoom>
+                        <SemanticZoom.ZoomedInView>
+                            <ListView x:Name="allmusic" 
+                                      ItemClick="allmusic_ItemClick" 
+                                      IsItemClickEnabled="True" IsHoldingEnabled="False" 
+                                      ItemTemplate="{StaticResource AllItemTemplate}"
+                                      ItemsSource="{Binding Source={StaticResource AllItemsGrouped}}"
+                                      >
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
+                                        <GroupStyle.HeaderContainerStyle >
+                                            <Style TargetType="ListViewHeaderItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </GroupStyle.HeaderContainerStyle>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </SemanticZoom.ZoomedInView>
+                        <SemanticZoom.ZoomedOutView>
+                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+								      ItemsSource="{Binding Source={StaticResource AllItemsGrouped}, Path=CollectionGroups}"
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </SemanticZoom.ZoomedOutView>
+                    </SemanticZoom>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Artist" IsHoldingEnabled="False">
-                <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="artistcategory" ItemClick="artistcategory_ItemClick" IsItemClickEnabled="True">
-                        <ListView.DataContext>
-                            <Model:FolderTracker/>
-                        </ListView.DataContext>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ListViewItem IsHitTestVisible="False">
-                                    <StackPanel Margin="0,5,0,0" >
-                                        <TextBlock Text="{Binding }" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0"/>
-                                    </StackPanel>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+
+            <!--Tab Artist-->
+            <PivotItem Header="Artist">
+                <Grid>                    
+                    <SemanticZoom>
+                        <SemanticZoom.ZoomedInView>
+                            <ListView x:Name="artistCategory" 
+                                      ItemClick="artistcategory_ItemClick" 
+                                      IsItemClickEnabled="True" 
+                                      BorderThickness="1" IsHoldingEnabled="False" 
+                                      ItemTemplate="{StaticResource ArtistItemTemplate}"
+                                      ItemsSource="{Binding Source={StaticResource ArtistItemsGrouped}}"
+                                      >
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
+                                        <GroupStyle.HeaderContainerStyle >
+                                            <Style TargetType="ListViewHeaderItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </GroupStyle.HeaderContainerStyle>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </SemanticZoom.ZoomedInView>
+                        <SemanticZoom.ZoomedOutView>
+                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+								      ItemsSource="{Binding Source={StaticResource ArtistItemsGrouped}, Path=CollectionGroups}"
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </SemanticZoom.ZoomedOutView>
+                    </SemanticZoom>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Album" IsHoldingEnabled="False">
-                <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="albumcategory" ItemClick="albumcategory_ItemClick" IsItemClickEnabled="True">
-                        <ListView.DataContext>
-                            <Model:FolderTracker/>
-                        </ListView.DataContext>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ListViewItem IsHitTestVisible="False">
-                                    <StackPanel Margin="0,5,0,0">
-                                        <TextBlock Text="{Binding }" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0"/>
-                                    </StackPanel>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+
+            <!--Tab Album-->
+            <PivotItem Header="Album">
+                <Grid>                    
+                    <SemanticZoom>
+                        <SemanticZoom.ZoomedInView>
+                            <ListView x:Name="albumCategory" 
+                                      ItemClick="albumcategory_ItemClick" 
+                                      IsItemClickEnabled="True" 
+                                      BorderThickness="1" IsHoldingEnabled="False" 
+                                      ItemTemplate="{StaticResource AlbumItemTemplate}"
+                                      ItemsSource="{Binding Source={StaticResource AlbumItemsGrouped}}"
+                                      >
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
+                                        <GroupStyle.HeaderContainerStyle >
+                                            <Style TargetType="ListViewHeaderItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </GroupStyle.HeaderContainerStyle>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </SemanticZoom.ZoomedInView>
+                        <SemanticZoom.ZoomedOutView>
+                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+								      ItemsSource="{Binding Source={StaticResource AlbumItemsGrouped}, Path=CollectionGroups}"
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </SemanticZoom.ZoomedOutView>
+                    </SemanticZoom>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="AlbumArtist" IsHoldingEnabled="False">
-                <Grid Style="{StaticResource GridInPivot}">
-                    <ListView x:Name="albumcartistategory" ItemClick="albumartistcategory_ItemClick" IsItemClickEnabled="True">
-                        <ListView.GroupStyle>
-                            <GroupStyle HidesIfEmpty="True" >
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding }" Style="{StaticResource HeaderTextBlockStyle}"/>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListView.GroupStyle>
-                        <ListView.DataContext>
-                            <Model:FolderTracker/>
-                        </ListView.DataContext>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ListViewItem IsHitTestVisible="False">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding  Key}" FontSize="25" Foreground="Red" />
-                                        <ListView ItemsSource="{Binding InternalList}">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Title}" FontSize="16"/>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                    </StackPanel>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+
+            <!--Tab Album Artist-->
+            <PivotItem Header="Album Artist">
+                <Grid>
+                    <SemanticZoom>
+                        <SemanticZoom.ZoomedInView>
+                            <ListView x:Name="albumArtistCategory" 
+                                      ItemClick="albumartistcategory_ItemClick" 
+                                      IsItemClickEnabled="True" 
+                                      BorderThickness="1" IsHoldingEnabled="False" 
+                                      ItemTemplate="{StaticResource AlbumArtistItemTemplate}"
+                                      ItemsSource="{Binding Source={StaticResource AlbumArtistItemsGrouped}}"
+                                      >
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
+                                        <GroupStyle.HeaderContainerStyle >
+                                            <Style TargetType="ListViewHeaderItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </GroupStyle.HeaderContainerStyle>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </SemanticZoom.ZoomedInView>
+                        <SemanticZoom.ZoomedOutView>
+                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+								      ItemsSource="{Binding Source={StaticResource AlbumArtistItemsGrouped}, Path=CollectionGroups}"
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" 
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </SemanticZoom.ZoomedOutView>
+                    </SemanticZoom>
                 </Grid>
             </PivotItem>
         </Pivot>
+        <ProgressRing x:Name="loadingProgress" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True"/>
     </Grid>
 </Page>
