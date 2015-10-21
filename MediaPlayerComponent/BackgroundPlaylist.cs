@@ -25,20 +25,25 @@ namespace MediaPlayerComponent
             get { return currentindex; }
             set
             {
-                if (ListPathsource == null)
+                if (currentindex != value)
                 {
-                    currentindex = -1;
+                    if (ListPathsource == null)
+                    {
+                        currentindex = -1;
+                    }
+                    else if (value < 0)
+                    {
+                        currentindex = ListPathsource.Count - 1;
+                    }
+                    else if (value >= ListPathsource.Count)
+                    {
+                        currentindex = 0;
+                    }
+                    else
+                        currentindex = value;
+                    TrackChanged(this, currentindex.ToString());
                 }
-                else if (value < 0)
-                {
-                    currentindex = ListPathsource.Count - 1;
-                }
-                else if (value >= ListPathsource.Count)
-                {
-                    currentindex = 0;
-                }
-                else
-                    currentindex = value;
+
             }
         }
         public string CurrentItem

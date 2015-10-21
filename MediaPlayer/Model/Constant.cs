@@ -58,6 +58,8 @@ namespace MediaPlayer
 
         public const string LoopState = "loopstate";
 
+        public const string Titte = "title";
+
     }
 
     /*
@@ -65,7 +67,7 @@ namespace MediaPlayer
      * rồi gởi message đến background với lệnh Command.LoopState (ở trên)
      * đối số thứ 2 là một trong 3 trạng thái sau.
      */
-    public enum eLoopState
+    enum eLoopState
     {
         None,
         One,

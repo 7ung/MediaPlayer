@@ -62,11 +62,22 @@ namespace MediaPlayerComponent
                 message.Add(Constant.BackgroundTaskStarted, "");
                 BackgroundMediaPlayer.SendMessageToForeground(message);
             }  
-            //Playlist.TrackChanged += Playlist_TrackChanged;
+            Playlist.TrackChanged += Playlist_TrackChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
             BackgroundMediaPlayer.Current.MediaEnded +=Current_MediaEnded;
             ApplicationSettingHelper.SaveSettingsValue(Constant.BackgroundTaskState, Constant.BackgroundTaskRunning);
             isbackgroundtaskrunning = true;
+        }
+
+        private void Playlist_TrackChanged(BackgroundPlaylist sender, object args)
+        {
+            if (this._foregroundState != eForegroundState.Suspended)
+            {
+                var msg = new ValueSet();
+                msg.Add(Command.Titte, Playlist.Name);
+                BackgroundMediaPlayer.SendMessageToForeground(msg);     
+            }
+
         }
 
         private void Current_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
@@ -112,6 +123,12 @@ namespace MediaPlayerComponent
             {
                 switch (key)
                 {
+                    case Constant.AppResumed:
+                        this._foregroundState = eForegroundState.Active;
+                        break;
+                    case Constant.AppSuspended:
+                        this._foregroundState = eForegroundState.Suspended;
+                        break;
                     case Command.InitList:
                         System.Diagnostics.Debug.WriteLine("message received Init list");
                         //Playlist.ListPathsource.Add(e.Data[Command.InitList])

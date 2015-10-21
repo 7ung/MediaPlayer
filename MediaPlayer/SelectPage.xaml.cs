@@ -82,7 +82,6 @@ namespace MediaPlayer
 
             _playlist.CurrentIndex = (e.Parameter as Playlist).CurrentIndex;
 
-            var x = BackgroundMediaPlayer.Current;
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
@@ -101,6 +100,7 @@ namespace MediaPlayer
                     );
                 initeresult.Completed = new AsyncActionCompletedHandler(initBackgroundtaskCompleted);
             }
+ 
         }
 
         /// <summary> 
