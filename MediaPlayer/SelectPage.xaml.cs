@@ -22,6 +22,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using Windows.ApplicationModel.Core;
+using System.Threading.Tasks;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
 namespace MediaPlayer
@@ -36,6 +38,8 @@ namespace MediaPlayer
         private AutoResetEvent _sererInitialized;
         private bool _isbackgroundtaskrunning = false;
         private bool isBackgroundTaskBegin;
+
+        private DispatcherTimer _dispatcherTimer = new DispatcherTimer();
 
         private bool Isbackgroundtaskrunning()
         {
@@ -101,6 +105,19 @@ namespace MediaPlayer
                     );
                 initeresult.Completed = new AsyncActionCompletedHandler(initBackgroundtaskCompleted);
             }
+
+            // init timer
+            _dispatcherTimer.Tick += dispatcherTimer_Tick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, object e)
+        {
+            if (BackgroundMediaPlayer.Current == null)
+                return;
+
+            progressBar.Value = BackgroundMediaPlayer.Current.Position.TotalSeconds;
         }
 
         /// <summary> 
@@ -119,6 +136,7 @@ namespace MediaPlayer
         {
             BackgroundMediaPlayer.Current.CurrentStateChanged += this.MediaPlayer_CurrentStateChanged;
             BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
+            
         }
         private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
@@ -135,11 +153,20 @@ namespace MediaPlayer
             }
         }
 
-        private void MediaPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
+        private async void MediaPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
         {
-            //throw new NotImplementedException();
-        }
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+               () =>
+                   {
+                       duration.Text = sender.NaturalDuration.ToString(@"mm\:ss");
+                       currentsecond.Text = sender.Position.ToString(@"mm\:ss");
 
+                       progressBar.Value = 0;
+                       progressBar.Maximum = sender.NaturalDuration.TotalSeconds;
+                   }
+               );
+        }
+        
         private void initBackgroundtaskCompleted(IAsyncAction asyncInfo, AsyncStatus asyncStatus)
         {
             if (asyncStatus == AsyncStatus.Completed)
@@ -202,16 +229,7 @@ namespace MediaPlayer
             HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
             this._playlist = null;
         }
-
-        private void mediaElement_MediaOpened_1(object sender, RoutedEventArgs e)
-        {
-            //BackgroundMediaPlayer.Current.SetUriSource(this.mediaElement.Source);
-            if (isBackgroundTaskBegin == false)
-            {
-               // BackgroundAudioTaskBegin();
-                isBackgroundTaskBegin = true;
-            }
-        }
+        
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
             //e.Handled = true;
@@ -225,11 +243,7 @@ namespace MediaPlayer
         {
 
         }
-
-        private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
 
         private void timeBtn_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
@@ -255,10 +269,11 @@ namespace MediaPlayer
 
         private void setMusicPostionPercent(float percent)
         {
-            var fileInfo = mediaElement.DataContext as FilesViewModel;
-            var time = fileInfo.Duration.TotalSeconds * percent;
-            
-            mediaElement.Position = new TimeSpan(0, 0, 0, (int)time);
+            if (BackgroundMediaPlayer.Current == null)
+                return;
+
+            var time = BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * percent;
+            BackgroundMediaPlayer.Current.Position = new TimeSpan(0, 0, 0, (int)time);
         }
 
         private void timeBtn_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -270,8 +285,7 @@ namespace MediaPlayer
             var curPos = Canvas.GetLeft(timeBtn);
             var percent = curPos / (timeCanvas.Width - 40);
 
-            //setMusicPostionPercent((float)percent);
-            
+            setMusicPostionPercent((float)percent);
             progressBar.Value = progressBar.Maximum * percent;
 
             _isManipulating = false;
@@ -286,6 +300,10 @@ namespace MediaPlayer
             var percent = progress.Value / progress.Maximum;
             var curPos = (timeCanvas.Width - 40) * percent;
             Canvas.SetLeft(timeBtn, curPos);
+
+            if (BackgroundMediaPlayer.Current == null)
+                return;
+            currentsecond.Text = BackgroundMediaPlayer.Current.Position.ToString(@"mm\:ss");
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
@@ -319,32 +337,21 @@ namespace MediaPlayer
                 BackgroundMediaPlayer.SendMessageToBackground(msg);
             }
         }
-
-        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            if ((sender as MediaElement).IsLooping)
-                return;
-            _playlist.Next();
-        }
+        
 
         private void repeatBtn_Checked(object sender, RoutedEventArgs e)
         {
-            this.mediaElement.IsLooping = true;
+            
         }
 
         private void repeatBtn_Unchecked(object sender, RoutedEventArgs e)
         {
-            this.mediaElement.IsLooping = false;
+            
         }
 
         private void playBtn_Click(object sender, RoutedEventArgs e)
         {
             
-        }
-
-        private void mediaElement_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

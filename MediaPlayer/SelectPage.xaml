@@ -25,23 +25,21 @@
                    Text="Now Playing" FontSize="35" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
         <StackPanel Margin="0,0,0,0" Grid.Row="1" d:LayoutOverrides="TopPosition, BottomPosition">
+            <Image x:Name="image" Height="300" Width="300" Source="Assets/default-thumbnail-2.png"/>
 
-            <MediaElement x:Name="mediaElement" Source="{Binding CurrentItem.File.Path, Mode=OneWay}" 
-                          Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" PosterSource="Assets/default-thumbnail.png" 
-                          MediaEnded="mediaElement_MediaEnded" Loaded="mediaElement_Loaded" MediaOpened="mediaElement_MediaOpened_1" AudioCategory="BackgroundCapableMedia" />
             <TextBlock x:Name="Textblock_Title" 
                        Text="{Binding CurrentItem.Title, Mode=OneWay}" FontSize="23"
                        Margin="0,10,0,20" HorizontalAlignment="Center"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <TextBlock x:Name="currentsecond" FontSize="11" Margin="13,0,0,0"
-            		Text="{Binding Position, Converter={StaticResource MyConverter}, ElementName=mediaElement, Mode=OneWay}" Width="Auto" TextAlignment="Left" VerticalAlignment="Center"/>
+            		Text="00:00" Width="Auto" TextAlignment="Left" VerticalAlignment="Center"/>
                 <ProgressBar x:Name="progressBar" Margin="10, 0, 10, 0" Padding="0" Width="300"
-                         Maximum="{Binding CurrentItem.Duration.TotalSeconds, Mode=OneWay}"
-                         Value="{Binding Position, Converter={StaticResource TimeSpanToInt}, ConverterParameter='Seconds', ElementName=mediaElement, Mode=TwoWay}" Foreground="White" ValueChanged="progressBar_ValueChanged"
+                         Maximum="100"
+                         Value="0" Foreground="White" ValueChanged="progressBar_ValueChanged"
                          />
                 <TextBlock x:Name="duration" FontSize="11" Margin="0,0,6,0"
-            		Text="{Binding CurrentItem.Duration, Converter={StaticResource MyConverter}, Mode=OneWay}" Width="Auto" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            		Text="00:00" Width="Auto" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 
             </StackPanel>
             <Canvas x:Name="timeCanvas" Width="340">
@@ -56,7 +54,7 @@
             </Canvas>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
-                <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonStyleWithImage}" BorderThickness="0" IsChecked="False" Checked="repeatBtn_Checked" Unchecked="repeatBtn_Unchecked">
+                <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonLoopStyle}" BorderThickness="0" IsChecked="True" Checked="repeatBtn_Checked" Unchecked="repeatBtn_Unchecked" IsThreeState="True">
                     <ToggleButton.Background>
                         <ImageBrush Stretch="Uniform" ImageSource="Assets/clockwise11.png"/>
                     </ToggleButton.Background>
@@ -67,11 +65,22 @@
                         <ImageBrush ImageSource="ms-appx:/Assets/rewind7.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="playBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" Style="{StaticResource ButtonStyleWithImage}" Width="70" MinWidth="50" MinHeight="50" Height="70" Margin="20,0" Click="playBtn_Click">
+                <!--<Button x:Name="playBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" Style="{StaticResource ButtonStyleWithImage}" Width="70" MinWidth="50" MinHeight="50" Height="70" Margin="20,0" Click="playBtn_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/play128.png" Stretch="Uniform"/>
                     </Button.Background>
-                </Button>
+                </Button>-->
+                <ToggleButton x:Name="playBtn" Content="" 
+                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              Style="{StaticResource TogglePlayButtonStyle}"
+                              Width="70" MinWidth="50" MinHeight="50" Height="70" Margin="20,0" 
+                              Click="playBtn_Click" BorderThickness="0" IsChecked="True"
+                              >
+                    <ToggleButton.Background>
+                        <ImageBrush Stretch="Uniform" ImageSource="Assets/play128.png"/>
+                    </ToggleButton.Background>
+                </ToggleButton>
+
                 <Button x:Name="nextBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" MinWidth="50" MinHeight="50" Width="60" Height="60" Style="{StaticResource ButtonStyleWithImage}" Click="nextBtn_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/forward28.png" Stretch="Uniform"/>
@@ -82,9 +91,9 @@
                         <ImageBrush Stretch="Uniform" ImageSource="Assets/shuffle26.png"/>
                     </ToggleButton.Background>
                 </ToggleButton>
-
-
+                
             </StackPanel>
+            
         </StackPanel>
     </Grid>
 </Page>
