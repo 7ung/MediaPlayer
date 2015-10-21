@@ -9,7 +9,7 @@
     xmlns:ViewModel="using:MediaPlayer.ViewModel" x:Name="page"
     x:Class="MediaPlayer.MainPage"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
     <Page.Resources>
         <Style x:Key="GridInPivot" TargetType="Grid">
             <Setter Property="Margin" Value="0,0,0,10"/>
@@ -63,16 +63,16 @@
         <!--Tab Template-->
         <DataTemplate x:Key="GroupHeaderTemplate">
             <Border Padding="5">
-                <Border Background="{StaticResource PhoneAccentBrush}" BorderBrush="{StaticResource PhoneAccentBrush}" 
+                <Border BorderBrush="{StaticResource PhoneAccentBrush}" 
                         BorderThickness="2" 
                         Width="62" Height="62" 
                         Margin="0,0,18,0" HorizontalAlignment="Left"
                         >
                     <TextBlock Text="{Binding Key}" 
-                               Foreground="{StaticResource PhoneForegroundBrush}" 
-                               FontSize="48" Padding="6" FontWeight="Bold"
+                               Foreground="{StaticResource PhoneAccentBrush}" 
+                               FontSize="45" Padding="6" FontWeight="Bold"
         				       FontFamily="{StaticResource PhoneFontFamilySemiLight}" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center" 
+                               HorizontalAlignment="Left" VerticalAlignment="Center" 
                                />
                 </Border>
             </Border>
@@ -85,7 +85,7 @@
                        Source="Assets/user73.png"
                        Margin="10"/>
                 <TextBlock FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                           Text="{Binding}" />
+                           Text="{Binding}" TextWrapping="WrapWholeWords" />
             </StackPanel>
         </DataTemplate>
 
@@ -95,7 +95,7 @@
                        Height="50" Width="50" 
                        Source="Assets/user73.png"
                        Margin="10"/>
-                <TextBlock Text="{Binding}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
             </StackPanel>
         </DataTemplate>
 
@@ -110,14 +110,14 @@
                            Source="Assets/default-thumbnail-2.png"
                            />
                 </Border>
-                <TextBlock Text="{Binding}" FontSize="21" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding}" FontSize="21" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="AllItemTemplate">
             <StackPanel Margin="0,5,0,0">
-                <TextBlock x:Name="listviewitem_Name"  Text="{Binding Title}" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0"/>
-                <TextBlock x:Name="listviewitem_Artist"  Text="{Binding Artist, TargetNullValue=Unknown}" FontSize="12" Padding="0,0,0,5" Margin="10,0,0,0" />
+                <TextBlock x:Name="listviewitem_Name"  Text="{Binding Title}" FontSize="23" Padding="0,5,0,0" Margin="10,0,0,0" TextWrapping="WrapWholeWords"/>
+                <TextBlock x:Name="listviewitem_Artist"  Text="{Binding Artist, TargetNullValue=Unknown}" FontSize="12" Padding="0,0,0,5" Margin="10,0,0,0" TextWrapping="WrapWholeWords" />
             </StackPanel>
         </DataTemplate>
 
@@ -134,9 +134,17 @@
         </DataTemplate>
 
     </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar RequestedTheme="Dark" ClosedDisplayMode="Minimal">
+            <AppBarButton x:Name="aboutBtn" Label="About" Icon="People" RequestedTheme="Dark"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
     <Grid>
-        
-        <Pivot x:Name="pivot" Height="{Binding Height, ElementName=page}" Width="{Binding Width, ElementName=page}">
+        <Pivot x:Name="pivot" 
+               Height="{Binding Height, ElementName=page}" 
+               Width="{Binding Width, ElementName=page}" 
+               Style="{StaticResource CategoryPivotStyle}">
             <!--Tab All Songs-->
             <PivotItem Header="All">
                 <Grid>
@@ -146,7 +154,7 @@
                                       ItemClick="allmusic_ItemClick" 
                                       IsItemClickEnabled="True" IsHoldingEnabled="False" 
                                       ItemTemplate="{StaticResource AllItemTemplate}"
-                                      ItemsSource="{Binding Source={StaticResource AllItemsGrouped}}"
+                                      ItemsSource="{Binding Source={StaticResource AllItemsGrouped}}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch"
                                       >
                                 <ListView.GroupStyle>
                                     <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
@@ -165,9 +173,17 @@
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+                            <GridView Background="#7F000000"  
 								      ItemsSource="{Binding Source={StaticResource AllItemsGrouped}, Path=CollectionGroups}"
-								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}">
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapGrid Orientation="Horizontal"
+                                                  HorizontalAlignment="Center"
+                                                  />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                 </Grid>
@@ -176,14 +192,14 @@
             <!--Tab Artist-->
             <PivotItem Header="Artist">
                 <Grid>                    
-                    <SemanticZoom>
+                    <SemanticZoom ScrollViewer.VerticalScrollBarVisibility="Disabled">
                         <SemanticZoom.ZoomedInView>
                             <ListView x:Name="artistCategory" 
                                       ItemClick="artistcategory_ItemClick" 
                                       IsItemClickEnabled="True" 
                                       BorderThickness="1" IsHoldingEnabled="False" 
                                       ItemTemplate="{StaticResource ArtistItemTemplate}"
-                                      ItemsSource="{Binding Source={StaticResource ArtistItemsGrouped}}"
+                                      ItemsSource="{Binding Source={StaticResource ArtistItemsGrouped}}" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                       >
                                 <ListView.GroupStyle>
                                     <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
@@ -202,9 +218,17 @@
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+                            <GridView Background="#7F000000" 
 								      ItemsSource="{Binding Source={StaticResource ArtistItemsGrouped}, Path=CollectionGroups}"
-								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}">
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapGrid Orientation="Horizontal"
+                                                  HorizontalAlignment="Center"
+                                                  />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                 </Grid>
@@ -213,14 +237,14 @@
             <!--Tab Album-->
             <PivotItem Header="Album">
                 <Grid>                    
-                    <SemanticZoom>
+                    <SemanticZoom ScrollViewer.VerticalScrollBarVisibility="Disabled">
                         <SemanticZoom.ZoomedInView>
                             <ListView x:Name="albumCategory" 
                                       ItemClick="albumcategory_ItemClick" 
                                       IsItemClickEnabled="True" 
                                       BorderThickness="1" IsHoldingEnabled="False" 
                                       ItemTemplate="{StaticResource AlbumItemTemplate}"
-                                      ItemsSource="{Binding Source={StaticResource AlbumItemsGrouped}}"
+                                      ItemsSource="{Binding Source={StaticResource AlbumItemsGrouped}}" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                       >
                                 <ListView.GroupStyle>
                                     <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
@@ -239,9 +263,17 @@
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+                            <GridView Background="#7F000000" 
 								      ItemsSource="{Binding Source={StaticResource AlbumItemsGrouped}, Path=CollectionGroups}"
-								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								      ItemTemplate="{StaticResource ZoomOutViewTemplate}">
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapGrid Orientation="Horizontal"
+                                                  HorizontalAlignment="Center"
+                                                  />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                 </Grid>
@@ -250,14 +282,14 @@
             <!--Tab Album Artist-->
             <PivotItem Header="Album Artist">
                 <Grid>
-                    <SemanticZoom>
+                    <SemanticZoom ScrollViewer.VerticalScrollBarVisibility="Disabled">
                         <SemanticZoom.ZoomedInView>
                             <ListView x:Name="albumArtistCategory" 
                                       ItemClick="albumartistcategory_ItemClick" 
                                       IsItemClickEnabled="True" 
                                       BorderThickness="1" IsHoldingEnabled="False" 
                                       ItemTemplate="{StaticResource AlbumArtistItemTemplate}"
-                                      ItemsSource="{Binding Source={StaticResource AlbumArtistItemsGrouped}}"
+                                      ItemsSource="{Binding Source={StaticResource AlbumArtistItemsGrouped}}" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                       >
                                 <ListView.GroupStyle>
                                     <GroupStyle HidesIfEmpty="True" HeaderTemplate="{Binding Source={StaticResource GroupHeaderTemplate}}">
@@ -276,15 +308,23 @@
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <GridView Background="{StaticResource PhoneBackgroundBrush}" 
+                            <GridView Background="#7F000000" 
 								      ItemsSource="{Binding Source={StaticResource AlbumArtistItemsGrouped}, Path=CollectionGroups}"
 								      ItemTemplate="{StaticResource ZoomOutViewTemplate}" 
-                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                      >
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapGrid Orientation="Horizontal"
+                                                  HorizontalAlignment="Center"
+                                                  />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                 </Grid>
             </PivotItem>
         </Pivot>
-        <ProgressRing x:Name="loadingProgress" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True"/>
+        <ProgressRing x:Name="loadingProgress" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" Background="{x:Null}"/>
     </Grid>
 </Page>
