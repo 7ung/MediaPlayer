@@ -86,7 +86,6 @@ namespace MediaPlayer
 
             _playlist.CurrentIndex = (e.Parameter as Playlist).CurrentIndex;
 
-            var x = BackgroundMediaPlayer.Current;
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
@@ -163,10 +162,10 @@ namespace MediaPlayer
 
                        progressBar.Value = 0;
                        progressBar.Maximum = sender.NaturalDuration.TotalSeconds;
-                   }
+        }
                );
         }
-        
+
         private void initBackgroundtaskCompleted(IAsyncAction asyncInfo, AsyncStatus asyncStatus)
         {
             if (asyncStatus == AsyncStatus.Completed)
@@ -175,7 +174,7 @@ namespace MediaPlayer
                 var msg = new ValueSet();
                 //var list = this._playlist.ListFile.Select(file => file.File.Path).ToArray();
                 
-                msg.Add(Command.Play, _playlist.CurrentIndex.ToString());
+                msg.Add(Command.PlayWithIndex, _playlist.CurrentIndex.ToString());
                 BackgroundMediaPlayer.SendMessageToBackground(msg);
                 // Do something here
             }
@@ -212,16 +211,18 @@ namespace MediaPlayer
                 if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
                 {
                     // set nút play thành playing
+                    playBtn.IsChecked = true;
                 }
                 else
                 {
                     // set nút play thành pause
+                    playBtn.IsChecked = false;
                 }
             }
             else
             {
                 // set nút play thàn playing 
-
+                playBtn.IsChecked = true;
             }
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -229,7 +230,7 @@ namespace MediaPlayer
             HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
             this._playlist = null;
         }
-        
+
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
             //e.Handled = true;
@@ -243,7 +244,7 @@ namespace MediaPlayer
         {
 
         }
-        
+
 
         private void timeBtn_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
@@ -271,7 +272,7 @@ namespace MediaPlayer
         {
             if (BackgroundMediaPlayer.Current == null)
                 return;
-
+            
             var time = BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds * percent;
             BackgroundMediaPlayer.Current.Position = new TimeSpan(0, 0, 0, (int)time);
         }
@@ -337,21 +338,69 @@ namespace MediaPlayer
                 BackgroundMediaPlayer.SendMessageToBackground(msg);
             }
         }
-        
+
 
         private void repeatBtn_Checked(object sender, RoutedEventArgs e)
         {
-            
+            //if (Isbackgroundtaskrunning())
+            //{
+            //    var msg = new ValueSet();
+            //    msg.Add(Command.LoopState, eLoopState.All);
+            //    BackgroundMediaPlayer.SendMessageToBackground(msg);
+            //}
         }
 
         private void repeatBtn_Unchecked(object sender, RoutedEventArgs e)
         {
-            
+            //if (Isbackgroundtaskrunning())
+            //{
+            //    var msg = new ValueSet();
+            //    msg.Add(Command.LoopState, eLoopState.One);
+            //    BackgroundMediaPlayer.SendMessageToBackground(msg);
+            //}
         }
 
         private void playBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (Isbackgroundtaskrunning())
+            {
+                var msg = new ValueSet();
+                
+                if (playBtn.IsChecked == true)
+                {
+                    msg.Add(Command.Play, "");
+                }
+                else
+                {
+                    msg.Add(Command.Pause, "");
+                }
+
+                BackgroundMediaPlayer.SendMessageToBackground(msg);
+            }
+        }
+
+        private void repeatBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Isbackgroundtaskrunning())
+            {
+                var x = sender as ToggleButton;
+                var msg = new ValueSet();
+                
+                if (x.IsChecked == true)
+                {
+                    msg.Add(Command.LoopState, eLoopState.All);
+                }
+                else if (x.IsChecked == false)
+                {
+                    msg.Add(Command.LoopState, eLoopState.One);
+                }
+                else
+                {
+                    msg.Add(Command.LoopState, eLoopState.None);
+                }
+                
+                BackgroundMediaPlayer.SendMessageToBackground(msg);
+            }
         }
     }
 }

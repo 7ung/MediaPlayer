@@ -41,12 +41,42 @@ namespace MediaPlayer
 
         public const string SetCurrentIndex = "setcurrentindex";
 
-        public const string Play = "play";
+        public const string PlayWithIndex = "playwithindex";
+
+        /// <summary>
+        /// hiểu là resume nhé 
+        /// </summary>
+        public const string Play = "play"; 
+
+        public const string Pause = "pause";
 
         public const string Shuffle = "shuffle";
 
         public const string Next = "next";
 
         public const string Previous = "previous";
+
+        public const string LoopState = "loopstate";
+
+        public const string Titte = "title";
+
     }
+
+    /*
+     * ở fore ground chỉ cần kiểm tra trạng thái của nút bấm loop
+     * rồi gởi message đến background với lệnh Command.LoopState (ở trên)
+     * đối số thứ 2 là một trong 3 trạng thái sau.
+     */
+    enum eLoopState
+    {
+        None,
+        One,
+        All,
+    }
+
+    /*
+     * muốn set trạng thái nút pause / resume thì 
+     * gởi message đến background với lệnh Command.Pause hoặc Command.Play (ở trên)
+     */
+    
 }

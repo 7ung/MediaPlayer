@@ -30,6 +30,9 @@ namespace MediaPlayerComponent
         private bool isbackgroundtaskrunning = false;
         //private PlaylistManager playlistManager;
         private BackgroundPlaylist Playlist;
+
+        private eLoopState _loopState = eLoopState.All;
+
         /// <summary>
         /// Hệ thống gọi đến hàm này khi association backgroundtask được bật
         /// </summary>
@@ -59,11 +62,47 @@ namespace MediaPlayerComponent
                 message.Add(Constant.BackgroundTaskStarted, "");
                 BackgroundMediaPlayer.SendMessageToForeground(message);
             }  
-           // Playlist.TrackedChanged += Playlist_TrackChanged;
+            Playlist.TrackChanged += Playlist_TrackChanged;
             BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
+            BackgroundMediaPlayer.Current.MediaEnded +=Current_MediaEnded;
             ApplicationSettingHelper.SaveSettingsValue(Constant.BackgroundTaskState, Constant.BackgroundTaskRunning);
             isbackgroundtaskrunning = true;
         }
+
+        private void Playlist_TrackChanged(BackgroundPlaylist sender, object args)
+        {
+            if (this._foregroundState != eForegroundState.Suspended)
+            {
+                var msg = new ValueSet();
+                msg.Add(Command.Titte, Playlist.Name);
+                BackgroundMediaPlayer.SendMessageToForeground(msg);     
+            }
+
+        }
+
+        private void Current_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
+        {
+            switch (this._loopState)
+            {
+                case eLoopState.None:
+                    //sender.AutoPlay = false;
+                    // or do nothing
+                    break;
+                case eLoopState.One:
+                    sender.Position = TimeSpan.FromSeconds(0);
+                    break;
+                case eLoopState.All:
+                    // trong play list đã tự động vòng rồi.
+                    this.Playlist.Next();
+                    this._smtc.DisplayUpdater.MusicProperties.Title = Playlist.Name;
+                    this._smtc.DisplayUpdater.Update();
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
 
         private void BackgroundMediaPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
         {
@@ -84,6 +123,12 @@ namespace MediaPlayerComponent
             {
                 switch (key)
                 {
+                    case Constant.AppResumed:
+                        this._foregroundState = eForegroundState.Active;
+                        break;
+                    case Constant.AppSuspended:
+                        this._foregroundState = eForegroundState.Suspended;
+                        break;
                     case Command.InitList:
                         System.Diagnostics.Debug.WriteLine("message received Init list");
                         //Playlist.ListPathsource.Add(e.Data[Command.InitList])
@@ -94,12 +139,15 @@ namespace MediaPlayerComponent
                         var currentindex = Convert.ToInt32(e.Data[Command.SetCurrentIndex]);
                         Playlist.Currentindex = currentindex;
                         break;
-                    case Command.Play:
+                    case Command.PlayWithIndex:
                         //Playlist.Play();
-                        Playlist.Currentindex = Int32.Parse(e.Data[Command.Play].ToString());
+                        Playlist.Currentindex = Int32.Parse(e.Data[Command.PlayWithIndex].ToString());
                         System.Diagnostics.Debug.WriteLine(Playlist.Currentindex);
                         BackgroundMediaPlayer.Current.SetUriSource(new Uri(Playlist.CurrentItem));
                         updatenewstmc();
+                        break;
+                    case Command.Pause:
+                        BackgroundMediaPlayer.Current.Pause();
                         break;
                     case Command.Shuffle:
                         Playlist.Shuffle();
@@ -115,6 +163,9 @@ namespace MediaPlayerComponent
                         BackgroundMediaPlayer.Current.SetUriSource(new Uri(Playlist.CurrentItem));
                         _smtc.DisplayUpdater.MusicProperties.Title = Playlist.Name;
                         _smtc.DisplayUpdater.Update();
+                        break;
+                    case Command.LoopState:
+                        this._loopState = (eLoopState)Enum.Parse(typeof(eLoopState), e.Data[Command.LoopState].ToString());
                         break;
                 }
             }

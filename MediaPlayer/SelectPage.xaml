@@ -44,17 +44,11 @@
             </StackPanel>
             <Canvas x:Name="timeCanvas" Width="340">
                 <Ellipse Canvas.Top="-26" x:Name="timeBtn" Fill="White" Height="39" Width="40" ManipulationDelta="timeBtn_ManipulationDelta" ManipulationMode="All" Stroke="#00000000" StrokeThickness="25" ManipulationCompleted="timeBtn_ManipulationCompleted">
-                    <!--<Canvas.Left>
-                        <Binding Path="Value" 
-                                 ElementName="progressBar"
-                                 Converter="{StaticResource ValueTimeline}"
-                                 />
-                    </Canvas.Left>-->
                 </Ellipse>
             </Canvas>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
-                <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonLoopStyle}" BorderThickness="0" IsChecked="True" Checked="repeatBtn_Checked" Unchecked="repeatBtn_Unchecked" IsThreeState="True">
+                <ToggleButton x:Name="repeatBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Width="45" Height="45" MinWidth="0" MinHeight="0" Style="{StaticResource ToggleButtonLoopStyle}" BorderThickness="0" IsChecked="True" Checked="repeatBtn_Checked" Unchecked="repeatBtn_Unchecked" IsThreeState="True" Click="repeatBtn_Click">
                     <ToggleButton.Background>
                         <ImageBrush Stretch="Uniform" ImageSource="Assets/clockwise11.png"/>
                     </ToggleButton.Background>
@@ -65,11 +59,6 @@
                         <ImageBrush ImageSource="ms-appx:/Assets/rewind7.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <!--<Button x:Name="playBtn" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{x:Null}" Foreground="White" Style="{StaticResource ButtonStyleWithImage}" Width="70" MinWidth="50" MinHeight="50" Height="70" Margin="20,0" Click="playBtn_Click">
-                    <Button.Background>
-                        <ImageBrush ImageSource="Assets/play128.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>-->
                 <ToggleButton x:Name="playBtn" Content="" 
                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                               Style="{StaticResource TogglePlayButtonStyle}"
