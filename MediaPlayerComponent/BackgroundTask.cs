@@ -67,6 +67,7 @@ namespace MediaPlayerComponent
             BackgroundMediaPlayer.Current.MediaEnded +=Current_MediaEnded;
             ApplicationSettingHelper.SaveSettingsValue(Constant.BackgroundTaskState, Constant.BackgroundTaskRunning);
             isbackgroundtaskrunning = true;
+            _loopState = eLoopState.None;
         }
 
         private void Playlist_TrackChanged(BackgroundPlaylist sender, object args)
@@ -148,6 +149,9 @@ namespace MediaPlayerComponent
                         break;
                     case Command.Pause:
                         BackgroundMediaPlayer.Current.Pause();
+                        break;
+                    case Command.Play:
+                        BackgroundMediaPlayer.Current.Play();
                         break;
                     case Command.Shuffle:
                         Playlist.Shuffle();

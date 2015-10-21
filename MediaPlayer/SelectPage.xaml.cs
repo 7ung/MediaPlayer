@@ -137,7 +137,7 @@ namespace MediaPlayer
             BackgroundMediaPlayer.MessageReceivedFromBackground += this.BackgroundMediaPlayer_MessageReceivedFromBackground;
             
         }
-        private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+        private async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             //throw new NotImplementedException();
             foreach (var key in e.Data.Keys)
@@ -147,6 +147,14 @@ namespace MediaPlayer
                     case Constant.BackgroundTaskStarted:
                         //Wait for Background Task to be initialized before starting playback
                         _sererInitialized.Set();
+                        break;
+                    case Command.Titte :
+                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                           () =>
+                           {
+                               this.Textblock_Title.Text = e.Data[Command.Titte].ToString();
+                           }
+                           );
                         break;
                 }
             }
