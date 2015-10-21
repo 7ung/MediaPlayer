@@ -148,7 +148,7 @@ namespace MediaPlayer
                 var msg = new ValueSet();
                 //var list = this._playlist.ListFile.Select(file => file.File.Path).ToArray();
                 
-                msg.Add(Command.Play, _playlist.CurrentIndex.ToString());
+                msg.Add(Command.PlayWithIndex, _playlist.CurrentIndex.ToString());
                 BackgroundMediaPlayer.SendMessageToBackground(msg);
                 // Do something here
             }
