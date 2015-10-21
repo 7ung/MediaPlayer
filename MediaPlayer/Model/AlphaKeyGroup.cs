@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace MediaPlayer.Model
 {
-    /// <summary>
-    /// class dùng để gom nhóm list thành các khị tự đầu
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    class AlphaKeyGroup<T>
+    public class AlphaKeyGroup<T>
     {
         const string GlobalGroupKey = "\uD83C\uDF10";
         // use to get key info
@@ -44,7 +40,7 @@ namespace MediaPlayer.Model
             {
                 foreach (AlphaKeyGroup<T> group in list)
                 {
-                   // group.InternalList.Sort((c0, c1) => { return keyselector(c0).CompareTo(keyselector(c1)); });
+                   group.InternalList.Sort((c0, c1) => { return keyselector(c0).CompareTo(keyselector(c1)); });
                 }
             }
             return list;

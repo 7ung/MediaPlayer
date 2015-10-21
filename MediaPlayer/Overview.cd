@@ -64,7 +64,7 @@
   <Class Name="MediaPlayer.SelectPage">
     <Position X="5.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>UARIiAACACIQAghAwAgCAAQACABCwgwAQQgAAAAAAII=</HashCode>
+      <HashCode>UARIiAACACIQAAhAwAgCAAQACABAggwAQQgAAAAAAII=</HashCode>
       <FileName>SelectPage.xaml.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

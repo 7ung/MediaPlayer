@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaPlayer.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace MediaPlayer.Model
 {
@@ -101,24 +103,10 @@ namespace MediaPlayer.Model
 
     public class ValueTimelineConverter : DependencyObject, IValueConverter
     {
-        //public ProgressBar TimelineBar
-        //{
-        //    get { return (ProgressBar)GetValue(ParentControlProperty); }
-        //    set { SetValue(ParentControlProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty ParentControlProperty =
-        //    DependencyProperty.Register("TimelineBar", typeof(ProgressBar), typeof(ValueTimelineConverter), new PropertyMetadata(null));
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var time = (double)value;
             var bar = parameter as ProgressBar;
-
-            //if (parameter.ToString().CompareTo("Milliseconds") == 0)
-            //{
-            //      kiểm tra param truyền vô
-            //}
 
             if (bar == null)
                 return 0;
@@ -140,6 +128,4 @@ namespace MediaPlayer.Model
             return bar.Maximum * percent;
         }
     }
-
-
 }

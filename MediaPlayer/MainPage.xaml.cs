@@ -31,7 +31,7 @@ namespace MediaPlayer
     {
         private bool isLoaded;
         public FolderTracker Tracker { get; set; }
-        List<IGrouping<string, FilesViewModel>> keyedlist;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -81,29 +81,47 @@ namespace MediaPlayer
                     // nếu file temp không tồn tại thì playlist = null.
                     // fetch tất cả file nhạc từ bộ nhớ
                     await Tracker.fetchStorageInfo();
-
-                    // luư lại nhữ gì đã fetch được
                     var listpath = Tracker.AllFiles.ToList();
                     Playlist savedplaylist = new Playlist(listpath, 0);
                     await CacheAccess.SaveToCache(Constant.PlaylistPath, savedplaylist);
                 }
                 else
                 {
-                    // ngược lại. nếu file temp có tồn tại thì gán những gì đọc được cho tracker
                     Tracker.AllFiles = playlist.ListFile;
                 }
-                this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title, StringComparer.OrdinalIgnoreCase).ToList());
-                this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
-                this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
+                //this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title, StringComparer.OrdinalIgnoreCase).ToList());
+                //this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
+                //this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
                 // this.setListBinding(this.albumcartistategory, Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct().OrderBy(str =>str, StringComparer.OrdinalIgnoreCase));
 
-                keyedlist = Tracker.AllFiles.GroupBy(file => file.Name).ToList();
-                var groups = AlphaKeyGroup<FilesViewModel>.CreatGroups(
+                // all item
+                var allItems = AlphaKeyGroup<FilesViewModel>.CreatGroups(
                      Tracker.AllFiles,
-                     file => file.Name, true);
-                this.albumcartistategory.ItemsSource = groups;
-                isLoaded = true;
+                        file => file.Title, true);
+                allItemsGrouped.Source = allItems;
 
+                // artist
+                var artist = AlphaKeyGroup<string>.CreatGroups(
+                        Tracker.AllFiles.Select(file => file.Artist).Distinct(),
+                        file => file, true);
+                artistItemsGrouped.Source = artist;
+
+                // album
+                var album = AlphaKeyGroup<string>.CreatGroups(
+                        Tracker.AllFiles.Select(file => file.Album).Distinct(),
+                        file => file, true);
+                albumItemsGrouped.Source = album;
+
+                // album artist
+                var albumArtist = AlphaKeyGroup<string>.CreatGroups(
+                       Tracker.AllFiles.Select(file => file.AlbumArtist).Distinct(),
+                       file => file, true);
+                albumArtistItemsGrouped.Source = albumArtist;
+
+                // load done!
+                isLoaded = true;
+                loadingProgress.IsActive = false;
+                loadingProgress.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -118,10 +136,13 @@ namespace MediaPlayer
         private void allmusic_ItemClick(object sender, ItemClickEventArgs e)
         {
             var clickeditem = (e.ClickedItem as FilesViewModel);                // bài hát được click
-            var listfile = allmusic.ItemsSource as IList<FilesViewModel>;       // danh sách các bài hát
-            int index = listfile.IndexOf(e.ClickedItem as FilesViewModel);      // zero-base index bài hát được chọn
+            // bind kiểu CollectionViewSource cái này ko lấy được
+            //var listfile = allmusic.ItemsSource as IList<FilesViewModel>;       // danh sách các bài hát
+            //int index = listfile.IndexOf(e.ClickedItem as FilesViewModel);      // zero-base index bài hát được chọn
 
-            Playlist playlist = new Playlist(listfile, index);
+            int index = Tracker.AllFiles.IndexOf(e.ClickedItem as FilesViewModel);
+
+            Playlist playlist = new Playlist(Tracker.AllFiles, index);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 

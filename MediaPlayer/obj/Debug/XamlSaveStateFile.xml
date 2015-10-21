@@ -1,4 +1,6 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
+    <LocalAssembly PathName="c:\7ung project\winphone\musicplayer\mediaplayer\obj\debug\intermediatexaml\mediaplayer.exe" HashGuid="264d8964-b66f-990f-b18c-9a568b0ab77c" />
+    <ReferenceAssembly PathName="c:\7ung project\winphone\musicplayer\mediaplayercomponent\bin\debug\mediaplayercomponent.winmd" HashGuid="cac45c05-74ca-8f00-5575-7c8cfa9d4234" />
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>
