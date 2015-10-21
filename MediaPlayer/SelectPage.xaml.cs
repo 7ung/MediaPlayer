@@ -162,12 +162,16 @@ namespace MediaPlayer
 
         private async void MediaPlayer_CurrentStateChanged(Windows.Media.Playback.MediaPlayer sender, object args)
         {
+            if (sender.CurrentState == MediaPlayerState.Paused)
+                return;
+            if (sender.CurrentState == MediaPlayerState.Stopped)
+                return;
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                () =>
                    {
                        duration.Text = sender.NaturalDuration.ToString(@"mm\:ss");
                        currentsecond.Text = sender.Position.ToString(@"mm\:ss");
-
+                       
                        progressBar.Value = 0;
                        progressBar.Maximum = sender.NaturalDuration.TotalSeconds;
         }
