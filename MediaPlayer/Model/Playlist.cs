@@ -7,12 +7,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Media.Playback;
 
 namespace MediaPlayer.Model
 {
-    class Playlist : INotifyCollectionChanged, INotifyPropertyChanged
+    public sealed class Playlist : INotifyCollectionChanged, INotifyPropertyChanged
     {
+        //static private Windows.Media.Playback.MediaPlayer mediaplayer;
         private ObservableCollection<FilesViewModel> _listfile;
+
         private int _currentIndex;
         private FilesViewModel _currentItem;
 
@@ -57,6 +60,8 @@ namespace MediaPlayer.Model
             PropertyChanged +=Playlist_PropertyChanged;
             CurrentIndex = currentitem;
             CurrentItem = ListFile[CurrentIndex];
+
+
         }
 
         private void Playlist_PropertyChanged(object sender, PropertyChangedEventArgs e)

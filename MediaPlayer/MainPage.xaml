@@ -82,7 +82,7 @@
                             <GroupStyle HidesIfEmpty="True" >
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding }" Style="{StaticResource HeaderTextBlockStyle}"/>
+                                        <TextBlock Text="{Binding  }" Style="{StaticResource HeaderTextBlockStyle}"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace MediaPlayer.Model
 {
+    /// <summary>
+    /// class dùng để gom nhóm list thành các khị tự đầu
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     class AlphaKeyGroup<T>
     {
         const string GlobalGroupKey = "\uD83C\uDF10";

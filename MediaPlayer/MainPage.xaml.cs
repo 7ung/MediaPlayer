@@ -75,7 +75,23 @@ namespace MediaPlayer
 
             if (isLoaded == false)
             {
-                await Tracker.fetchStorageInfo();
+                Playlist playlist = await CacheAccess.LoadFromCache(Constant.PlaylistPath); // đọc file temp từ bộ nhớ
+                if (playlist == null)
+                {
+                    // nếu file temp không tồn tại thì playlist = null.
+                    // fetch tất cả file nhạc từ bộ nhớ
+                    await Tracker.fetchStorageInfo();
+
+                    // luư lại nhữ gì đã fetch được
+                    var listpath = Tracker.AllFiles.ToList();
+                    Playlist savedplaylist = new Playlist(listpath, 0);
+                    await CacheAccess.SaveToCache(Constant.PlaylistPath, savedplaylist);
+                }
+                else
+                {
+                    // ngược lại. nếu file temp có tồn tại thì gán những gì đọc được cho tracker
+                    Tracker.AllFiles = playlist.ListFile;
+                }
                 this.setListBinding(this.allmusic, Tracker.AllFiles.OrderBy(file => file.Title, StringComparer.OrdinalIgnoreCase).ToList());
                 this.setListBinding(this.artistcategory, Tracker.AllFiles.Select(file => file.Artist).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
                 this.setListBinding(this.albumcategory, Tracker.AllFiles.Select(file => file.Album).Distinct().OrderBy(str => str, StringComparer.OrdinalIgnoreCase));
@@ -112,7 +128,7 @@ namespace MediaPlayer
         private void artistcategory_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = Tracker.AllFiles.Where(file => file.Artist == (e.ClickedItem as string)).ToList();
-            Playlist playlist = new Playlist(item);
+            Playlist playlist = new Playlist(item,0);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 
@@ -120,7 +136,7 @@ namespace MediaPlayer
         {
             string clickeditem = e.ClickedItem as string;                                       // tên album được chọn
             var album = Tracker.AllFiles.Where(file => file.Album == clickeditem).ToList();     // lọc ra các bài hát từ album
-            Playlist playlist = new Playlist(album);
+            Playlist playlist = new Playlist(album,0);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 
@@ -128,7 +144,7 @@ namespace MediaPlayer
         {
             string clickeditem = e.ClickedItem as string;                               // tên album artist được chhọn
             var album = Tracker.AllFiles.Where(file => file.AlbumArtist == clickeditem).ToList();
-            Playlist playlist = new Playlist(album);
+            Playlist playlist = new Playlist(album,0);
             Frame.Navigate(typeof(SelectPage), playlist);
         }
 
